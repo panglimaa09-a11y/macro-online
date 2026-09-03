@@ -16,8 +16,16 @@ if (!(Test-Path $Cloudflared)) {
 $csproj = Join-Path $PSScriptRoot 'MacroOnline.Runtime.csproj'
 if (!(Test-Path $csproj)) { throw "Runtime project tidak ditemukan: $csproj" }
 
+# Generate token tanpa RandomNumberGenerator::Fill agar kompatibel
+# dengan Windows PowerShell / runtime .NET yang tidak menyediakan static Fill().
 $bytes = New-Object byte[] 32
-[System.Security.Cryptography.RandomNumberGenerator]::Fill($bytes)
+$rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+try {
+    $rng.GetBytes($bytes)
+}
+finally {
+    $rng.Dispose()
+}
 $token = [Convert]::ToBase64String($bytes).Replace('+','-').Replace('/','_').TrimEnd('=')
 
 Write-Host '[BUILD] Runtime...' -ForegroundColor Yellow
@@ -62,14 +70,20 @@ if (!$publicUrl) {
 $wsUrl = $publicUrl -replace '^https://','wss://'
 $connectUrl = "$wsUrl/?token=$token"
 
+# Simpan URL koneksi agar mudah dipakai oleh dashboard/launcher lokal.
+$connectFile = Join-Path $Base 'macro-online-runtime-url.txt'
+Set-Content -Path $connectFile -Value $connectUrl -Encoding UTF8
+try { Set-Clipboard -Value $connectUrl } catch {}
+
 Write-Host ''
 Write-Host '========================================' -ForegroundColor Green
 Write-Host '         RUNTIME ONLINE' -ForegroundColor Green
 Write-Host '========================================' -ForegroundColor Green
 Write-Host "PUBLIC URL : $publicUrl" -ForegroundColor White
 Write-Host "WS URL     : $connectUrl" -ForegroundColor White
+Write-Host "URL FILE   : $connectFile" -ForegroundColor White
 Write-Host ''
-Write-Host 'SALIN WS URL di atas ke Dashboard Macro Online.' -ForegroundColor Yellow
+Write-Host 'WS URL sudah disalin ke Clipboard.' -ForegroundColor Green
 Write-Host 'Jangan bagikan URL/token ini ke orang lain.' -ForegroundColor Yellow
 Write-Host ''
 Write-Host 'Tekan Ctrl+C untuk menghentikan Runtime + tunnel.' -ForegroundColor Cyan
