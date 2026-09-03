@@ -16,7 +16,6 @@ if (!(Test-Path $Cloudflared)) {
 $csproj = Join-Path $PSScriptRoot 'MacroOnline.Runtime.csproj'
 if (!(Test-Path $csproj)) { throw "Runtime project tidak ditemukan: $csproj" }
 
-# One token per runtime session. It is required by the Runtime WebSocket.
 $bytes = New-Object byte[] 32
 [System.Security.Cryptography.RandomNumberGenerator]::Fill($bytes)
 $token = [Convert]::ToBase64String($bytes).Replace('+','-').Replace('/','_').TrimEnd('=')
@@ -40,10 +39,10 @@ Write-Host ''
 $log = Join-Path $env:TEMP 'macro-online-cloudflared.log'
 if (Test-Path $log) { Remove-Item $log -Force }
 
-$tunnel = Start-Process -FilePath $Cloudflared -ArgumentList @('tunnel','--url','http://127.0.0.1:17477','--no-autoupdate') -RedirectStandardOutput $log -RedirectStandardError $log -PassThru
+$tunnel = Start-Process -FilePath $Cloudflared -ArgumentList @('tunnel','--url','http://127.0.0.1:17477','--no-autoupdate') -RedirectStandardError $log -PassThru
 
 $publicUrl = $null
-for ($i = 0; $i -lt 30; $i++) {
+for ($i = 0; $i -lt 45; $i++) {
     Start-Sleep -Seconds 1
     if (Test-Path $log) {
         $text = Get-Content $log -Raw -ErrorAction SilentlyContinue
@@ -77,9 +76,7 @@ Write-Host 'Tekan Ctrl+C untuk menghentikan Runtime + tunnel.' -ForegroundColor 
 Write-Host ''
 
 try {
-    while (!$runtime.HasExited -and !$tunnel.HasExited) {
-        Start-Sleep -Seconds 2
-    }
+    while (!$runtime.HasExited -and !$tunnel.HasExited) { Start-Sleep -Seconds 2 }
 }
 finally {
     if (!$runtime.HasExited) { Stop-Process -Id $runtime.Id -Force -ErrorAction SilentlyContinue }
