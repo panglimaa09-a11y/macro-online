@@ -1,0 +1,366 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Macro Online</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,#1d2742 0%,transparent 35%),radial-gradient(circle at bottom right,#152b38 0%,transparent 35%),#070b12;color:#f5f7fa}.container{width:min(1100px,calc(100% - 32px));margin:auto;padding:28px 0 50px}header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:#fff;color:#070b12;font-weight:900}.brand h1{margin:0;font-size:22px}.brand p{margin:4px 0 0;color:#8994a7;font-size:13px}.connection{display:flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid #263143;border-radius:999px;background:#0c111b;font-size:13px;color:#aeb8c9}.dot{width:9px;height:9px;border-radius:50%;background:#e5a11a}.grid{display:grid;grid-template-columns:1.35fr .65fr;gap:18px}.card{background:rgba(13,18,28,.94);border:1px solid #202a3a;border-radius:18px;padding:22px;box-shadow:0 15px 50px rgba(0,0,0,.22)}.hero{min-height:300px;display:flex;flex-direction:column;justify-content:space-between}.eyebrow{color:#8290a7;text-transform:uppercase;letter-spacing:1.8px;font-size:11px;font-weight:700}h2{margin:10px 0;font-size:clamp(30px,5vw,48px);line-height:1}h3{margin:8px 0 14px}.description{color:#9da8ba;line-height:1.7;max-width:650px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}button{border:0;border-radius:11px;padding:13px 20px;font-size:14px;font-weight:700;cursor:pointer}#start,#enable{background:#f4f6f8;color:#070b12}#disable{background:#242d3c;color:#f5f7fa}button:disabled{opacity:.45;cursor:not-allowed}.status{margin-top:18px;color:#8994a7;font-size:13px}.status strong{color:#f5f7fa}.info{display:grid;gap:12px}.info-row{display:flex;justify-content:space-between;gap:15px;padding:13px 0;border-bottom:1px solid #1d2635}.info-row:last-child{border-bottom:0}.label{color:#7f8b9f}.value{text-align:right;font-weight:700}.runtime-box{margin-top:16px}
+.runtime-check{margin-top:18px;padding-top:4px}
+.check-runtime{background:#f4f6f8;color:#070b12;width:100%;margin-bottom:10px}
+.runtime-message{padding:12px 14px;border:1px solid #293448;border-radius:10px;background:#090e16;color:#9da8ba;font-size:13px;line-height:1.5}
+.runtime-download{margin-top:10px;padding:14px;border:1px solid #5a4020;border-radius:12px;background:#18130b}
+.runtime-warning{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;color:#d9c29a;font-size:13px;line-height:1.5}
+.runtime-warning strong{color:#f0b94b}.runtime-box label{display:block;color:#8994a7;font-size:12px;margin-bottom:7px}.runtime-box input{width:100%;padding:12px;border:1px solid #293448;border-radius:10px;background:#090e16;color:#f5f7fa;outline:none}.runtime-box small{display:block;color:#69758a;margin-top:7px;line-height:1.5}.save{margin-top:9px;background:#182131;color:#dce3ed;padding:9px 13px;font-size:12px}.wide{grid-column:1/-1}.download{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.download p{margin:6px 0 0;color:#8994a7;line-height:1.6;font-size:13px}.download-btn{display:inline-block;text-decoration:none;background:#f4f6f8;color:#070b12;border-radius:11px;padding:13px 20px;font-size:14px;font-weight:700;white-space:nowrap}.guide{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{padding:16px;border:1px solid #202a3a;border-radius:13px;background:#090e16}.step b{display:block;margin-bottom:7px}.step span{color:#8994a7;font-size:13px;line-height:1.6}.powershell{background:#05080d;border:1px solid #33415a;border-radius:14px;overflow:hidden;margin-top:14px}.ps-head{padding:10px 14px;background:#111827;color:#8fa1bb;font-size:12px;border-bottom:1px solid #293448}.ps-body{padding:15px}.ps-code{color:#dbe6f5;font:12px/1.7 Consolas,monospace;word-break:break-all;white-space:pre-wrap}.copy{margin-top:12px;background:#f4f6f8;color:#070b12;padding:10px 15px;font-size:12px}.note{color:#748198;font-size:12px;line-height:1.6;margin:12px 0 0}.sequence{font-size:24px;font-weight:800;letter-spacing:.5px;padding:16px;border:1px solid #293448;border-radius:13px;background:#090e16}.notice{color:#8994a7;line-height:1.6;font-size:13px}.modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.modal.show{display:flex}.modal-card{width:min(720px,100%);max-height:92vh;overflow:auto;background:#0d121c;border:1px solid #2a3649;border-radius:20px;padding:24px}.modal-card h3{font-size:22px;margin:0 0 10px}.modal-card p{color:#9da8ba;line-height:1.65}.modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.secondary{background:#202a3a;color:#f5f7fa}.tiny{font-size:12px;color:#68758a!important;margin-top:10px}@media(max-width:760px){header{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr}.guide{grid-template-columns:1fr 1fr}}@media(max-width:480px){.guide{grid-template-columns:1fr}.sequence{font-size:18px}}
+</style></head>
+<body>
+<div class="container">
+<header><div class="brand"><div class="logo">MO</div><div><h1>Macro Online</h1><p>Windows Macro Control Center</p></div></div><div class="connection"><span class="dot" id="dot"></span><span id="connectionText">Runtime Offline</span></div></header>
+<main class="grid">
+<section class="section">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Runtime</div>
+      <h2>System Status</h2>
+    </div>
+  </div>
+
+  <div class="runtime-box">
+    <div class="runtime-status-row">
+      <span>Runtime</span>
+      <strong id="runtimeStatus">OFFLINE</strong>
+    </div>
+
+    <div class="runtime-status-row">
+      <span>Engine</span>
+      <strong>V7.4</strong>
+    </div>
+
+    <div class="runtime-status-row">
+      <span>Trigger</span>
+      <strong>Physical RMB</strong>
+    </div>
+
+    <div class="runtime-status-row">
+      <span>Connection</span>
+      <strong>Auto</strong>
+    </div>
+
+    <button class="save" id="checkRuntime" type="button">
+      CEK RUNTIME
+    </button>
+
+    <small id="runtimeHelp">
+      Klik CEK RUNTIME untuk memeriksa Runtime Windows.
+    </small>
+  </div>
+</section>
+<section class="card wide"><div class="eyebrow">Pertama Kali</div><h3>Jalankan Runtime dari PowerShell</h3><p class="description">Copy satu blok PowerShell, buka Windows PowerShell, paste, lalu Enter. Paket resmi diunduh dari GitHub dan Runtime + Engine + tunnel dijalankan otomatis.</p><div class="powershell"><div class="ps-head">PowerShell — One Command Setup & Start</div><div class="ps-body"><div class="ps-code" id="psCommand">$ErrorActionPreference='Stop'; $u='https://github.com/panglimaa09-a11y/macro-online/archive/refs/heads/main.zip'; $z=Join-Path $env:TEMP 'macro-online-main.zip'; $d=Join-Path $env:USERPROFILE 'Macro Online'; Invoke-WebRequest -UseBasicParsing $u -OutFile $z; if(Test-Path $d){Remove-Item $d -Recurse -Force}; Expand-Archive $z -DestinationPath $env:TEMP -Force; Move-Item (Join-Path $env:TEMP 'macro-online-main') $d; Remove-Item $z -Force; powershell.exe -ExecutionPolicy Bypass -File (Join-Path $d 'Runtime\START-PUBLIC-RUNTIME.ps1')</div><button class="copy" id="copyCommand">COPY COMMAND</button></div></div><p class="note">Setelah Enter, Runtime akan membuka dashboard melalui tunnel secara otomatis. Biarkan window Runtime tetap terbuka.</p></section>
+<section class="card wide"><div class="eyebrow">Cara Pakai</div><h3>Aktifkan Macro</h3><div class="guide"><div class="step"><b>01 — START</b><span>Jalankan command PowerShell satu kali.</span></div><div class="step"><b>02 — ONLINE</b><span>Tunggu sampai Runtime Online dan dashboard terbuka otomatis.</span></div><div class="step"><b>03 — AKTIFKAN</b><span>Klik AKTIFKAN MACRO. Dashboard mengirim F6 ke Engine.</span></div><div class="step"><b>04 — TRIGGER</b><span>Tekan Physical RMB untuk memulai macro.</span></div><div class="step"><b>05 — SEQUENCE</b><span>LMB → RMB → LMB → Q → Q.</span></div><div class="step"><b>06 — SELESAI</b><span>Macro selesai setelah Q kedua.</span></div><div class="step"><b>07 — OFF</b><span>Klik MATIKAN MACRO. Dashboard mengirim F7.</span></div><div class="step"><b>08 — TUTUP</b><span>Baru tutup Runtime jika sudah selesai.</span></div></div></section>
+<section class="card wide"><div class="download"><div><div class="eyebrow">Download</div><h3>Macro Online Package</h3><p>Paket berisi Runtime, Engine V7.4, launcher, dan Web.</p></div><a class="download-btn" href="https://github.com/panglimaa09-a11y/macro-online/archive/refs/heads/main.zip">DOWNLOAD ZIP</a></div></section>
+<section class="card wide"><div class="eyebrow">Current Macro</div><h3>Sequence</h3><div class="sequence">LMB → RMB → LMB → Q → Q</div><p class="notice">Vercel adalah interface. Runtime dan Engine V7.4 berjalan lokal di Windows. Engine V7.4 tidak diubah.</p></section>
+</main></div>
+<div class="modal" id="startModal"><div class="modal-card"><h3>START Macro Online</h3><p>Gunakan satu command PowerShell di bawah. Setelah Runtime dan tunnel siap, dashboard akan dibuka otomatis.</p><div class="powershell"><div class="ps-head">COPY BLOK INI</div><div class="ps-body"><div class="ps-code" id="modalCommand"></div><button class="copy" id="modalCopy">COPY COMMAND</button></div></div><div class="modal-actions"><button class="secondary" id="closeModal">TUTUP</button></div></div></div>
+<script>
+const start=document.getElementById('start'),enable=document.getElementById('enable'),disable=document.getElementById('disable'),macroStatus=document.getElementById('macroStatus'),runtimeStatus=document.getElementById('runtimeStatus'),connectionText=document.getElementById('connectionText'),dot=document.getElementById('dot'),runtimeUrl=document.getElementById('runtimeUrl'),connect=document.getElementById('connect'),modal=document.getElementById('startModal'),closeModal=document.getElementById('closeModal'),ps=document.getElementById('psCommand'),modalPs=document.getElementById('modalCommand');let socket=null;
+modalPs.textContent=ps.textContent;
+function offline(){runtimeStatus.textContent='OFFLINE';connectionText.textContent='Runtime Offline';dot.style.background='#e5a11a';enable.disabled=true;disable.disabled=true}
+function online(){runtimeStatus.textContent='ONLINE';connectionText.textContent='Runtime Online';dot.style.background='#2ecc71';enable.disabled=false}
+function macro(on){macroStatus.textContent=on?'ON':'OFF';enable.disabled=on;disable.disabled=!on}
+function connectRuntime(url){if(!url){offline();return}url=url.trim();if(url.startsWith('http://'))url=url.replace('http://','ws://');else if(url.startsWith('https://'))url=url.replace('https://','wss://');try{if(socket)socket.close();socket=new WebSocket(url);socket.onopen=()=>{localStorage.setItem('macro_runtime_url',url);runtimeUrl.value=url;online()};socket.onclose=()=>offline();socket.onerror=()=>offline();socket.onmessage=e=>{const m=String(e.data).toUpperCase();if(m.startsWith('OK:ENABLE')||m.includes('MACRO_ON'))macro(true);if(m.startsWith('OK:DISABLE')||m.includes('MACRO_OFF'))macro(false)}}catch(e){offline()}}
+
+
+function checkRuntime(){
+    const message = document.getElementById('runtimeMessage');
+    const download = document.getElementById('runtimeDownload');
+    const button = document.getElementById('checkRuntime');
+
+    button.disabled = true;
+    button.textContent = 'MEMERIKSA...';
+    message.textContent = 'Menghubungkan ke Runtime Windows...';
+    download.style.display = 'none';
+
+    try {
+        if(socket) {
+            try { socket.close(); } catch(e) {}
+        }
+
+        socket = new WebSocket('ws://127.0.0.1:17477/');
+
+        socket.onopen = () => {
+            localStorage.setItem('macro_runtime_url','ws://127.0.0.1:17477/');
+            message.textContent = '✓ Runtime aktif dan terhubung.';
+            message.style.color = '#2ecc71';
+            download.style.display = 'none';
+            runtimeStatus.textContent = 'ONLINE';
+            connectionText.textContent = 'Runtime Online';
+            dot.style.background = '#2ecc71';
+            enable.disabled = false;
+            button.disabled = false;
+            button.textContent = 'CEK RUNTIME';
+        };
+
+        socket.onclose = () => {
+            if(runtimeStatus.textContent !== 'ONLINE') {
+                message.textContent = '⚠ Runtime belum aktif. Download ZIP terlebih dahulu lalu jalankan Runtime.';
+                message.style.color = '#e5a11a';
+                download.style.display = 'block';
+                offline();
+            }
+
+            button.disabled = false;
+            button.textContent = 'CEK RUNTIME';
+        };
+
+        socket.onerror = () => {
+            message.textContent = '⚠ Runtime belum aktif. Download ZIP terlebih dahulu lalu jalankan Runtime.';
+            message.style.color = '#e5a11a';
+            download.style.display = 'block';
+            offline();
+            button.disabled = false;
+            button.textContent = 'CEK RUNTIME';
+        };
+
+        socket.onmessage = e => {
+            const m = String(e.data).toUpperCase();
+
+            if(m.startsWith('OK:ENABLE') || m.includes('MACRO_ON')){
+                macro(true);
+            }
+
+            if(m.startsWith('OK:DISABLE') || m.includes('MACRO_OFF')){
+                macro(false);
+            }
+        };
+
+    } catch(e) {
+        message.textContent = '⚠ Runtime belum aktif. Download ZIP terlebih dahulu.';
+        message.style.color = '#e5a11a';
+        download.style.display = 'block';
+        offline();
+        button.disabled = false;
+        button.textContent = 'CEK RUNTIME';
+    }
+}
+async function copyCommand(btn){try{await navigator.clipboard.writeText(ps.textContent);const t=btn.textContent;btn.textContent='COPIED ✓';setTimeout(()=>btn.textContent=t,1500)}catch(e){alert('Copy gagal. Silakan salin command manual.')}}
+start.onclick=()=>modal.classList.add('show');closeModal.onclick=()=>modal.classList.remove('show');modal.onclick=e=>{if(e.target===modal)modal.classList.remove('show')};document.getElementById('copyCommand').onclick=e=>copyCommand(e.target);document.getElementById('modalCopy').onclick=e=>copyCommand(e.target);connect.onclick=connectManual;
+document.getElementById('checkRuntime').onclick=checkRuntime;enable.onclick=()=>{if(socket?.readyState===WebSocket.OPEN)socket.send('ENABLE')};disable.onclick=()=>{if(socket?.readyState===WebSocket.OPEN)socket.send('DISABLE')};
+const injected=(typeof __MACRO_ONLINE_RUNTIME_WS__ !== 'undefined') ? __MACRO_ONLINE_RUNTIME_WS__ : '';
+const saved=localStorage.getItem('macro_runtime_url');
+const query=new URLSearchParams(location.search).get('runtime');
+offline();
+</script><script>
+/* ============================================================
+   MACRO ONLINE - REAL RUNTIME CHECK
+   Runtime lokal:
+   http://127.0.0.1:17477/
+   ============================================================ */
+
+const LOCAL_RUNTIME_HTTP = "http://127.0.0.1:17477/";
+const LOCAL_RUNTIME_WS   = "ws://127.0.0.1:17477/";
+
+const runtimeStatus = document.getElementById("runtimeStatus");
+const runtimeHelp = document.getElementById("runtimeHelp");
+const checkRuntime = document.getElementById("checkRuntime");
+
+let runtimeSocket = null;
+let runtimeOnline = false;
+
+function setRuntimeStatus(online, message) {
+    runtimeOnline = online;
+
+    if (runtimeStatus) {
+        runtimeStatus.textContent = online ? "ONLINE" : "OFFLINE";
+        runtimeStatus.style.color = online ? "#22c55e" : "#ef4444";
+    }
+
+    if (runtimeHelp) {
+        runtimeHelp.textContent = message;
+    }
+
+    const enableButton = document.getElementById("enable");
+    const disableButton = document.getElementById("disable");
+
+    if (enableButton) enableButton.disabled = !online;
+    if (disableButton) disableButton.disabled = !online;
+}
+
+function checkRuntimeNow() {
+    if (checkRuntime) {
+        checkRuntime.disabled = true;
+        checkRuntime.textContent = "MEMERIKSA...";
+    }
+
+    setRuntimeStatus(false, "Menghubungkan ke Runtime Windows...");
+
+    /*
+       Pemeriksaan pertama menggunakan HTTP.
+       Ini memastikan port Runtime benar-benar hidup.
+    */
+    fetch(LOCAL_RUNTIME_HTTP, {
+        method: "GET",
+        cache: "no-store"
+    })
+    .then(function(response) {
+        if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+        }
+
+        connectRuntimeSocket();
+    })
+    .catch(function() {
+        setRuntimeStatus(
+            false,
+            "Runtime belum aktif. Download ZIP Macro Online, extract, lalu jalankan Runtime."
+        );
+
+        if (checkRuntime) {
+            checkRuntime.disabled = false;
+            checkRuntime.textContent = "CEK RUNTIME";
+        }
+    });
+}
+
+function connectRuntimeSocket() {
+    try {
+        if (runtimeSocket) {
+            try { runtimeSocket.close(); } catch(e) {}
+        }
+
+        runtimeSocket = new WebSocket(LOCAL_RUNTIME_WS);
+
+        runtimeSocket.onopen = function() {
+            runtimeOnline = true;
+
+            setRuntimeStatus(
+                true,
+                "Runtime Windows terhubung dan siap digunakan."
+            );
+
+            if (checkRuntime) {
+                checkRuntime.disabled = false;
+                checkRuntime.textContent = "CEK RUNTIME";
+            }
+        };
+
+        runtimeSocket.onmessage = function(event) {
+            const message = String(event.data || "").trim();
+
+            if (message === "ONLINE" ||
+                message === "READY" ||
+                message === "MACRO ON" ||
+                message === "MACRO OFF" ||
+                message === "ENABLED" ||
+                message === "DISABLED") {
+
+                runtimeOnline = true;
+
+                if (message === "MACRO ON") {
+                    const status = document.getElementById("macroStatus");
+                    if (status) status.textContent = "ON";
+                }
+
+                if (message === "MACRO OFF") {
+                    const status = document.getElementById("macroStatus");
+                    if (status) status.textContent = "OFF";
+                }
+            }
+        };
+
+        runtimeSocket.onerror = function() {
+            setRuntimeStatus(
+                false,
+                "Runtime tidak dapat dihubungi. Jalankan Runtime terlebih dahulu."
+            );
+
+            if (checkRuntime) {
+                checkRuntime.disabled = false;
+                checkRuntime.textContent = "CEK RUNTIME";
+            }
+        };
+
+        runtimeSocket.onclose = function() {
+            runtimeOnline = false;
+
+            setRuntimeStatus(
+                false,
+                "Runtime offline. Jalankan Runtime lalu klik CEK RUNTIME."
+            );
+
+            if (checkRuntime) {
+                checkRuntime.disabled = false;
+                checkRuntime.textContent = "CEK RUNTIME";
+            }
+        };
+
+    } catch(error) {
+        setRuntimeStatus(
+            false,
+            "Runtime belum aktif. Download ZIP dan jalankan Runtime."
+        );
+
+        if (checkRuntime) {
+            checkRuntime.disabled = false;
+            checkRuntime.textContent = "CEK RUNTIME";
+        }
+    }
+}
+
+/* ============================================================
+   BUTTON CEK RUNTIME
+   ============================================================ */
+
+if (checkRuntime) {
+    checkRuntime.addEventListener("click", checkRuntimeNow);
+}
+
+/* ============================================================
+   AKTIFKAN / MATIKAN MACRO
+   ============================================================ */
+
+function sendRuntimeCommand(command) {
+    if (!runtimeSocket ||
+        runtimeSocket.readyState !== WebSocket.OPEN) {
+
+        setRuntimeStatus(
+            false,
+            "Runtime belum terhubung. Klik CEK RUNTIME terlebih dahulu."
+        );
+
+        return false;
+    }
+
+    runtimeSocket.send(command);
+    return true;
+}
+
+const enableMacroButton = document.getElementById("enable");
+const disableMacroButton = document.getElementById("disable");
+
+if (enableMacroButton) {
+    enableMacroButton.addEventListener("click", function() {
+        if (sendRuntimeCommand("ENABLE")) {
+            const status = document.getElementById("macroStatus");
+            if (status) status.textContent = "ON";
+        }
+    });
+}
+
+if (disableMacroButton) {
+    disableMacroButton.addEventListener("click", function() {
+        if (sendRuntimeCommand("DISABLE")) {
+            const status = document.getElementById("macroStatus");
+            if (status) status.textContent = "OFF";
+        }
+    });
+}
+
+/*
+   Jangan otomatis menganggap Runtime ONLINE.
+   User harus benar-benar melakukan CEK RUNTIME.
+*/
+setRuntimeStatus(
+    false,
+    "Klik CEK RUNTIME untuk memeriksa Runtime Windows."
+);
+</script>
+</body></html>
+
