@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Macro Online</title>
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    min-height:100vh;
+    background:#0b0f14;
+    color:#fff;
+    font-family:Arial,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.card{
+    width:min(700px,92%);
+    background:#111820;
+    border:1px solid #26313d;
+    border-radius:18px;
+    padding:32px;
+    box-shadow:0 20px 60px #0008;
+}
+h1{margin-top:0}
+.status{
+    padding:14px;
+    border-radius:10px;
+    background:#18212b;
+    margin:20px 0;
+}
+button{
+    width:100%;
+    padding:15px;
+    margin-top:10px;
+    border:0;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:16px;
+}
+.enable{background:#1f9d55;color:white}
+.disable{background:#d64545;color:white}
+pre{
+    background:#080b0f;
+    padding:15px;
+    border-radius:10px;
+    overflow:auto;
+}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Macro Online</h1>
+<p>MacroForge V7.4 Control Center</p>
+
+<div class="status">
+Status WebSocket:
+<strong id="status">CONNECTING...</strong>
+</div>
+
+<button class="enable" onclick="send('ENABLE')">
+AKTIFKAN MACRO
+</button>
+
+<button class="disable" onclick="send('DISABLE')">
+MATIKAN MACRO
+</button>
+
+<h3>Macro</h3>
+<pre>LMB → RMB → LMB → Q → Q
+
+Trigger:
+Physical RMB</pre>
+
+<p id="log"></p>
+</div>
+
+<script>
+let ws;
+
+function connect(){
+    ws = new WebSocket("ws://127.0.0.1:17477/");
+
+    ws.onopen = () => {
+        document.getElementById("status").textContent = "CONNECTED";
+        log("WebSocket connected.");
+    };
+
+    ws.onclose = () => {
+        document.getElementById("status").textContent = "DISCONNECTED";
+        log("WebSocket disconnected.");
+        setTimeout(connect,1500);
+    };
+
+    ws.onerror = () => {
+        document.getElementById("status").textContent = "ERROR";
+    };
+
+    ws.onmessage = e => log(e.data);
+}
+
+function send(command){
+    if(!ws || ws.readyState !== WebSocket.OPEN){
+        log("Runtime belum terhubung.");
+        return;
+    }
+
+    ws.send(command);
+    log("COMMAND: " + command);
+}
+
+function log(text){
+    document.getElementById("log").textContent = text;
+}
+
+connect();
+</script>
+</body>
+</html>
