@@ -16,6 +16,12 @@ if (!(Test-Path $Cloudflared)) {
 $csproj = Join-Path $PSScriptRoot 'MacroOnline.Runtime.csproj'
 if (!(Test-Path $csproj)) { throw "Runtime project tidak ditemukan: $csproj" }
 
+# Matikan cloudflared lama yang masih memakai file log.
+Get-Process -Name 'cloudflared' -ErrorAction SilentlyContinue | ForEach-Object {
+    try { Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue } catch {}
+}
+Start-Sleep -Milliseconds 500
+
 $bytes = New-Object byte[] 32
 $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
 try { $rng.GetBytes($bytes) } finally { $rng.Dispose() }
@@ -30,8 +36,12 @@ Write-Host '[START] Public HTTPS tunnel...' -ForegroundColor Green
 Write-Host 'Tunggu URL trycloudflare.com...' -ForegroundColor Yellow
 Write-Host ''
 
-$log = Join-Path $env:TEMP 'macro-online-cloudflared.log'
-if (Test-Path $log) { Remove-Item $log -Force }
+$log = Join-Path $env:TEMP ('macro-online-cloudflared-' + $PID + '.log')
+if (Test-Path $log) {
+    try { Remove-Item $log -Force -ErrorAction Stop } catch {
+        $log = Join-Path $env:TEMP ('macro-online-cloudflared-' + $PID + '-' + [DateTime]::UtcNow.Ticks + '.log')
+    }
+}
 
 $tunnel = Start-Process -FilePath $Cloudflared -ArgumentList @('tunnel','--url','http://127.0.0.1:17477','--no-autoupdate') -RedirectStandardError $log -PassThru
 
@@ -42,12 +52,13 @@ for ($i = 0; $i -lt 45; $i++) {
         $text = Get-Content $log -Raw -ErrorAction SilentlyContinue
         $m = [regex]::Match($text,'https://[a-z0-9-]+\.trycloudflare\.com')
         if ($m.Success) { $publicUrl = $m.Value; break }
+        if ($tunnel.HasExited) { break }
     }
 }
 
 if (!$publicUrl) {
     Write-Host '[ERROR] URL tunnel tidak ditemukan. Log:' -ForegroundColor Red
-    if (Test-Path $log) { Get-Content $log -Tail 30 }
+    if (Test-Path $log) { Get-Content $log -Tail 50 }
     if (!$tunnel.HasExited) { Stop-Process -Id $tunnel.Id -Force -ErrorAction SilentlyContinue }
     exit 1
 }
