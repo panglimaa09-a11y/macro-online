@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 
 const string Prefix = "http://127.0.0.1:17477/";
 var runtimeToken = Environment.GetEnvironmentVariable("MACRO_ONLINE_TOKEN") ?? "";
+var publicWsUrl = Environment.GetEnvironmentVariable("MACRO_ONLINE_PUBLIC_WS_URL") ?? "";
 
 if (string.IsNullOrWhiteSpace(runtimeToken))
 {
@@ -80,20 +81,6 @@ Console.WriteLine("[RUNTIME READY]");
 Console.WriteLine("[WEB] http://127.0.0.1:17477");
 Console.WriteLine();
 
-_ = Task.Run(async () =>
-{
-    await Task.Delay(1000);
-    try
-    {
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = "http://127.0.0.1:17477",
-            UseShellExecute = true
-        });
-    }
-    catch { }
-});
-
 while (true)
 {
     HttpListenerContext context;
@@ -126,10 +113,7 @@ while (true)
                 while (ws.State == WebSocketState.Open)
                 {
                     WebSocketReceiveResult result;
-                    try
-                    {
-                        result = await ws.ReceiveAsync(buffer, CancellationToken.None);
-                    }
+                    try { result = await ws.ReceiveAsync(buffer, CancellationToken.None); }
                     catch { break; }
 
                     if (result.MessageType == WebSocketMessageType.Close) break;
@@ -155,14 +139,16 @@ while (true)
                     catch { break; }
                 }
 
-                try { await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "closed", CancellationToken.None); }
-                catch { }
+                try { await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "closed", CancellationToken.None); } catch { }
                 return;
             }
 
             if (File.Exists(webPath))
             {
-                var data = await File.ReadAllBytesAsync(webPath);
+                var html = await File.ReadAllTextAsync(webPath);
+                var injected = System.Text.Json.JsonSerializer.Serialize(publicWsUrl);
+                html = html.Replace("__MACRO_ONLINE_RUNTIME_WS__", injected);
+                var data = Encoding.UTF8.GetBytes(html);
                 response.ContentType = "text/html; charset=utf-8";
                 response.ContentLength64 = data.Length;
                 await response.OutputStream.WriteAsync(data);
